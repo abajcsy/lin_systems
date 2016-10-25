@@ -7,12 +7,9 @@ N = 20;
 p_Q = 1;
 p_R = 1;
 
-size(p_Q*eye(2))
-size(C)
-
 Q_f = zeros(2)
-Q = C.' * p_Q*eye(2) * C
-R = p_R * eye(2)
+Q = p_Q*eye(2) % should be C.' * Q * C?
+R = p_R * eye(1)
 
 x_0 = [1 ; 0];
 
@@ -28,11 +25,11 @@ for i=1:N
     P{t} = Q + (K{t}.')*R*K{t} + (A + B*K{t}).' * P{t+1} * (A + B*K{t}); 
 end    
 
-K
-P
+K{1}
+P{1}
 
 u = cell(N, 1);
-x = cell(N+1,1); x{0} = x_0;
+x = cell(N+1,1); x{1} = x_0;
 y = cell(N, 1);
 J = cell(N, 1);
 
@@ -42,8 +39,3 @@ for t=2:N+1
    y{t-1} = C*x{t-1};
    J{t-1} = x{t-1}.' * P{t-1} * x{t-1};
 end
-
-u
-x
-y
-J
