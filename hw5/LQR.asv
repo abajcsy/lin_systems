@@ -1,0 +1,51 @@
+A = [1 1; 0 1];
+B = [0 ; 1];
+C = [1 0];
+
+N = 20;
+
+p_Q = 1;
+p_R = 1;
+
+Q_f = [0];
+Q = C.' * p_Q*[1] * C;
+R = p_R * [1];
+
+x_0 = [1 ; 0];
+
+% compute P, K matrices
+P = cell(N+1,1);
+K = cell(N,1);
+P{N+1} = Q_f;
+
+for i=1:N
+    t = N-i+1;
+    K{t} = inv(R + (B.')*P{t+1}*B) * (B.')*P{t+1}*A;
+    P{t} = Q + (K{t}.')*R*K{t} + (A + B*K{t}).' * P{t+1} * (A + B*K{t}); 
+end    
+
+u = zeros(1,N);
+x = cell(N+1,1); x{1} = x_0;
+y = zeros(1,N);
+J = cell(N, 1);
+
+for t=2:N+1
+   u(t-1) = -K{t-1} * x{t-1};
+   x{t} = A*x{t-1} + B*u{t-1};
+   y(t-1) = C*x{t-1};
+   J{t-1} = x{t-1}.' * P{t-1} * x{t-1};
+end
+
+dim = size(x);
+x_1 = []; x_2 = [];
+T = [];
+for i=1:dim(1)
+    first = x{i}(1);    second = x{i}(2);
+    x_1 = [x_1 first];  x_2 = [x_2 second];
+    T = [T i];
+end
+hold on
+%ssplot(T, x)
+plot(T, u)
+plot(T, y)
+
