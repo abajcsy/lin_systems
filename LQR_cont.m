@@ -1,16 +1,20 @@
+global A;
+global B;
+global K; 
+
 A = [0 1; 0 0];
 B = [0; 1];
-C = [1 0];
 
-Q = [1];
+Q = [100 0; 0 1];
 R = 1;
 
-% solve Continuous-time algebraic Riccati equation solution
-[X,L,G] = care(A,B,C'*C,R)
+% solve Riccati equation solution
+[K,P,E] = lqr(A,B,Q,R)
 
-% optimal gain matrix K, the Riccati solution S, and the closed-loop eigenvalues e = eig(A-B*K)
-sys = ss(A,B,C,0) 
-[K,S,e] = lqry(sys,Q,R) 
+x0 = [10 10];
+t0 = 0; tf = 20;
+[T,x] = ode23('xdot', [t0,tf], x0)
 
-F = R^(-1)*B.'*S
-
+plot(T, x(:,1), T, x(:,2), '--', 'LineWidth',2)
+title('State and velocity over time with Q = [1 0; 0 1], R = 1')
+legend('state','velocity')

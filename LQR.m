@@ -5,9 +5,8 @@ C = [1 0];
 N = 20;
 
 p_Q = 1;
-p_R = 1;
+p_R = 10*10*10;
 
-Q_f = [0];
 Q = C.' * p_Q*[1] * C;
 R = p_R * [1];
 
@@ -16,33 +15,31 @@ x_0 = [1 ; 0];
 % compute P, K matrices
 P = cell(N+1,1);
 K = cell(N,1);
-P{N+1} = Q_f;
+P{N+1} = Q;
 
 for i=1:N
     t = N-i+1;
     K{t} = inv(R + (B.')*P{t+1}*B) * (B.')*P{t+1}*A;
-    P{t} = Q + (K{t}.')*R*K{t} + (A + B*K{t}).' * P{t+1} * (A + B*K{t}); 
+    P{t} = Q + (K{t}.')*R*K{t} + (A - B*K{t}).' * P{t+1} * (A - B*K{t}); 
 end    
 
-u = cell(N, 1);
+u = zeros(1,N);
 x = cell(N+1,1); x{1} = x_0;
-y = cell(N, 1);
-J = cell(N, 1);
+y = zeros(1,N);
+J = zeros(1,N);
 
 for t=2:N+1
-   u{t-1} = -K{t-1} * x{t-1};
-   x{t} = A*x{t-1} + B*u{t-1};
-   y{t-1} = C*x{t-1};
-   J{t-1} = x{t-1}.' * P{t-1} * x{t-1};
+   u(t-1) = -K{t-1} * x{t-1};
+   x{t} = A*x{t-1} + B*u(t-1);
+   y(t-1) = C*x{t-1};
+   J(t-1) = x{t-1}.' * P{t-1} * x{t-1};
 end
 
-dim = size(x);
-x_1 = []; x_2 = [];
-T = [];
-for i=1:dim(1)
-    first = x{i}(1);    second = x{i}(2);
-    x_1 = [x_1 first];  x_2 = [x_2 second];
-    T = [T i];
-end
+T = [1:N];
+hold on
+plot(T, u, 'LineWidth',2)
+plot(T, y, 'LineWidth',2)
+plot(T, J, 'LineWidth',2)
+title('Control, Output, and Cost-to-go for p_Q = 1, p_R = 10^3')
+legend('control','output', 'cost-to-go')
 
-plot(T, x_1, T, x_2, '--')

@@ -52,8 +52,8 @@ if __name__ == '__main__':
 	p_Q = 1
 	p_R = 10*10*10
 
-	Q = C.T * p_Q*np.array([[1, 0], [0, 1]]) * C
-	R = p_R*np.array([[1, 0], [0, 1]])
+	Q = p_Q*np.array([[1, 0], [0, 1]]) #C.T * p_Q*np.array([[1, 0], [0, 1]]) * C
+	R = p_R*np.array([1])
 
 	x_0 = np.array([1,0])
 
