@@ -43,3 +43,10 @@ plot(T, J, 'LineWidth',2)
 title('Control, Output, and Cost-to-go for p_Q = 1, p_R = 10^3')
 legend('control','output', 'cost-to-go')
 
+m = [0; 1]
+n = [2 3]
+m*n
+
+syms b
+bla = [0 1; -b.^(-1/2) -sqrt(2)*b.^(-1/4)]
+[V,D] = eig(bla)

@@ -1,15 +1,17 @@
 global A;
 global B;
 global K; 
+global F;
 
 A = [0 1; 0 0];
 B = [0; 1];
 
-Q = [100 0; 0 1];
+Q = [1 0; 0 1];
 R = 1;
 
 % solve Riccati equation solution
 [K,P,E] = lqr(A,B,Q,R)
+F = inv(R)*transpose(B)*P
 
 x0 = [10 10];
 t0 = 0; tf = 20;

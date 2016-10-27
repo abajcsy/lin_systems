@@ -2,6 +2,6 @@ function [xdot] = xdot(t,x)
 
 global A;
 global B;
-global K;
+global F;
 
-xdot = (A-B*K)*x;
+xdot = (A-B*F)*(x-[4;0]);
